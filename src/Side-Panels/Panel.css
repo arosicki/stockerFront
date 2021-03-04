@@ -1,0 +1,42 @@
+.panel {
+    position: fixed;
+    background-color: #242424;
+    height: 95vh;
+    width: 400px;
+    padding: 5px;
+    transition: .3s ease-out;
+    display: flex;
+    justify-content: center;
+}
+.panel * {
+    box-sizing: border-box;
+}
+.panel-right {
+    right: 0;
+    transform: translateX(100%);
+}
+.panel-left {
+    left: 0;
+    transform: translateX(-100%);
+}
+.visible {
+    display: block;
+    position: absolute;
+    transform: translateX(0%);
+    scroll-behavior: smooth;
+}
+
+.panel > .close-icon {
+    user-select: none;
+    position: absolute;
+    cursor: pointer;
+}
+
+.panel-right > .close-icon {
+    left: 7px;
+    top: 7px;
+}
+.panel-left > .close-icon {
+    right: 7px;
+    top: 7px;
+}

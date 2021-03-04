@@ -1,0 +1,12 @@
+.btn-primary {
+    width: 150px;
+    display: inline-block;
+    color: #fff;
+    background-color: rgba(73,148,254, 0.6);
+    border: none;
+    font-size: 17px;
+    outline: none;
+}
+.btn-primary:hover {
+    background-color: rgba(73,148,254, 0.7);
+}

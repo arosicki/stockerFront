@@ -1,0 +1,69 @@
+.panel-usericon {
+    width: 128px;
+    height: 128px;
+    user-select: none;
+}
+
+.panel-user {
+    position: absolute;
+    transform: translate(-50%, 0);
+    left: 50%;
+    top: 6vh;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.panel-username {
+    margin-top: 3px;
+    text-align: center;
+}
+
+.change-password {
+    bottom: 30px;
+    left: 35px;
+    position: absolute;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+.change-password > label {
+    position: absolute;
+    margin-left: 4px;
+    font-weight: 400;
+    color: #ccc;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    pointer-events: none;
+    user-select: none; 
+}
+.change-password > label[for="password"] {
+    top: 7px
+}
+
+.change-password > label[for="new-password"] {
+    top: 47px
+}
+
+.change-password > label[for="confirm-password"] {
+    top: 87px
+}
+.change-password > input:not(:placeholder-shown) + label,
+.change-password > input:focus + label {
+    font-size: 11px;
+    margin-top: -7px;
+    transition: all 0.2s ease-in-out;
+}
+
+.change-password > input::placeholder {
+    color: transparent;
+    font-size: 0px;
+}
+.change-password > input {
+    width: 340px;
+    height: 35px;
+    padding: 10px 0 0 3px;
+    margin-bottom: 5px;
+    font-size: 18px;
+    line-height: px;
+}

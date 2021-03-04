@@ -1,0 +1,17 @@
+.content {
+    max-width: 800px;
+    width: 100vw;
+    color: #fff;
+    margin-left: auto;
+    border-collapse: collapse; 
+    font-size: 16px;
+    border-left: #4d4d4d solid 1px;
+    border-right: #4d4d4d solid 1px;
+}
+.content > tbody > .content-stock:nth-child(2n + 1) {
+    background-color: #333;
+}
+.content > tbody > .content-stock:nth-child(2n) {
+    background-color: #1a1a1a;
+}
+

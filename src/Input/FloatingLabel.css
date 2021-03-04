@@ -1,0 +1,33 @@
+.floating-label > label {
+    position: absolute;
+    margin-left: 4px;
+    margin-top: 7px;
+    font-weight: 400;
+    left: 0;
+    color: #ccc;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    pointer-events: none;
+    user-select: none; 
+}
+
+.floating-label > input:not(:placeholder-shown) + label,
+.floating-label > input:focus + label {
+    font-size: 11px;
+    margin-top: 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+.floating-label > input::placeholder {
+    color: transparent;
+    font-size: 0px;
+}
+.floating-label > input {
+    height: 35px;
+    padding: 10px 0 0 3px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+.floating-label > label {
+    margin-top: 8px;
+}

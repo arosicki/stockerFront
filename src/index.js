@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Navbar from './Navbar';
+import Content from './Content';
+import "./index.css"
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Navbar />
+    <Content />
   </React.StrictMode>,
   document.getElementById('root')
 );

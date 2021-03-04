@@ -1,0 +1,23 @@
+.navbar-logo {
+    width: 32px;
+    height: 32px;
+    padding: 4px 10px 0 5px;
+    user-select: none;
+}
+.navbar-user {
+    margin-left: 50px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+.navbar-username {
+    color: #fff;
+    padding: 12px 10px 0 12px;
+    font-size: 14px;
+}
+.navbar-user:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
