@@ -1,0 +1,79 @@
+.table {
+    max-width: 800px;
+    width: 100vw;
+    color: #fff;
+    margin-left: auto;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 16px;
+    height: 200px;
+    border-left: #4d4d4d solid 1px;
+    border-right: #4d4d4d solid 1px;
+    border-spacing: 0;
+}
+.table > thead > tr > th {
+    padding: 10px 0 10px;
+}
+.table > tbody {
+    display: inline-block;
+    height: calc(100vh - 83px);
+    overflow-y: auto;
+}
+.table > tbody > tr:nth-child(2n + 1) {
+    background-color: #333;
+}
+.table > tbody > tr:nth-child(2n) {
+    background-color: #1a1a1a;
+}
+.table > tbody > tr > td{
+    padding: 10px 0 10px;
+}
+.table > tbody > tr > td.medium, 
+.table > thead > tr > th.medium {
+    min-width: 100px;
+    width: 200px;
+}
+.table > tbody > tr > td.small,
+.table > thead > tr > th.small {
+    min-width: 80px;
+    width: 110px;
+}
+.table > tbody > tr > td.button{
+    width: 100px;
+}
+.table > tbody > tr > td.id, 
+.table > thead > tr > th.id {
+    min-width: 55px;
+    width: 55px;
+}
+.table > thead > tr > th.large {
+    min-width: 200px;
+}
+.table > thead > tr > th.very-large {
+    min-width: 180px;
+    width: 308px;
+}
+.table tr {
+    border-bottom: #555 1px solid;
+    display: block;
+    width: 100%;
+}
+
+.table > tbody::-webkit-scrollbar {
+    width: 15px;
+  }
+.table > tbody::-webkit-scrollbar-track {
+    background: #4f4f4f;
+    width: 1px;
+    background-clip: content-box;
+  }
+.table > tbody::-webkit-scrollbar-thumb {
+    background: #777;
+    border-radius: 10px;
+    width: 8px;
+    border: 2px solid #4f4f4f;
+  }
+  
+.table > tbody::-webkit-scrollbar-thumb:hover {
+    background: #7c7c7c;
+  }

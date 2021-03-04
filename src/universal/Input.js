@@ -1,4 +1,4 @@
-import './FloatingLabel.css'
+import './Input.css'
 
 const FloatingLabel = ({name, label, width, type, autoComplete}) => (
 

@@ -11,3 +11,7 @@ body {
     color: #fff;
     user-select: none; 
 }
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}

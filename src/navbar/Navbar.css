@@ -1,0 +1,40 @@
+.navbar {
+    background-color: #1c1c1c;
+    height: 40px;
+    width: 100%;
+    display: flex;
+}
+.search-bar {
+    display: flex;
+    justify-self: center;
+    margin: 0 auto 0;
+    width: 45vw;
+    max-width: 600px;
+}
+
+.search-bar > .search-icon {
+    padding: 3px 5px 0 0;
+    font-size: 26px;
+    display: inline-block;
+    text-align: center;
+}
+
+.search-bar >.search-input {
+    margin: 5px 0 0;
+    padding-left: 5px;
+    height: 26px;
+    width: 50vw;
+    font-size: 16px;
+    font-weight: 400;
+}
+.navbar-userlogo {
+    width: 32px;
+    height: 32px;
+    padding: 4px 10px 0 5px;
+    user-select: none;
+}
+.navbar-username {
+    color: #fff;
+    padding: 12px 10px 0 12px;
+    font-size: 14px;
+}
