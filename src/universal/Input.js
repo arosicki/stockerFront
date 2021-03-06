@@ -9,5 +9,4 @@ const FloatingLabel = ({name, label, width, type, autoComplete}) => (
 
     )
 
-
 export default FloatingLabel

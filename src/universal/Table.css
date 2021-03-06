@@ -1,3 +1,6 @@
+@keyframes fadeIn{
+    from {background-color: #1a1a1a;}
+}
 .table {
     max-width: 800px;
     width: 100vw;
@@ -18,6 +21,7 @@
     display: inline-block;
     height: calc(100vh - 83px);
     overflow-y: auto;
+    overflow-y: overlay;
 }
 .table > tbody > tr:nth-child(2n + 1) {
     background-color: #333;
@@ -57,11 +61,13 @@
     border-bottom: #555 1px solid;
     display: block;
     width: 100%;
+    animation: fadeIn 0.5s;
 }
 
 .table > tbody::-webkit-scrollbar {
     width: 15px;
-  }
+}
+
 .table > tbody::-webkit-scrollbar-track {
     background: #4f4f4f;
     width: 1px;
@@ -77,3 +83,6 @@
 .table > tbody::-webkit-scrollbar-thumb:hover {
     background: #7c7c7c;
   }
+
+
+  

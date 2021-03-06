@@ -1,0 +1,12 @@
+.panel > .container {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 40%;
+}
+.err-msg {
+    height: 22px;
+    color: red;
+    text-align: center;
+    padding-top: 5px;
+}

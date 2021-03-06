@@ -30,11 +30,22 @@
 .navbar-userlogo {
     width: 32px;
     height: 32px;
-    padding: 4px 10px 0 5px;
+    padding: 4px 10px 0;
     user-select: none;
+    margin-left: auto;
 }
 .navbar-username {
     color: #fff;
-    padding: 12px 10px 0 12px;
+    padding: 12px 0 0 0;
     font-size: 14px;
+    margin-left: auto;
+}
+.navbar-money {
+    width: 50px;
+    color: #38b000;
+    font-weight: bold;
+    display: flex;
+    padding: 12px 0 0 0;
+    font-size: 14px;
+    margin-left: auto;
 }
