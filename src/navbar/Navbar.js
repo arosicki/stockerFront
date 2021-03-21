@@ -83,12 +83,14 @@ const Brand = () => {
         marginRight: "50px"
     }
 
-    let togglePanel = () => {
-        let panel = document.querySelector(".panel-left");
-        panel.classList.toggle("visible");
+    const closeAllPanels = () => {
+        document.querySelectorAll(".panel").forEach((t) => {
+            t.classList.remove("visible")
+        })
     }
 
-    return <Button type="transparent" action={togglePanel} style={style} text="Stocker Inc." />
+
+    return <Button type="transparent" action={closeAllPanels} style={style} text="Stocker Inc." />
 
 }
 

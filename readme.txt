@@ -1,0 +1,1 @@
+żądania wysyłane na adres localhost:8000 z założeniem, że folder główny development servera php znajduje się w /api
