@@ -11,7 +11,32 @@ const App = () => {
     const [logged, setLogged] = useState(false);
     const [user, setUser] = useState({username: "", money: "", registerDate: "" });
 
+
     useEffect( () => {
+        let toggleSellPanel = () => {
+            const sellPanel = document.querySelector(".sell-stock.panel")
+            const buyPanel = document.querySelector(".buy-stock.panel")
+            if (buyPanel.classList.contains("visible")) {
+                buyPanel.classList.remove("visible")
+                setTimeout(() => sellPanel.classList.add("visible"), 350)
+            }
+            else {
+                sellPanel.classList.toggle("visible")
+            }
+        }
+
+        let toggleBuyPanel = () => {
+            const sellPanel = document.querySelector(".sell-stock.panel")
+            const buyPanel = document.querySelector(".buy-stock.panel")
+            if (sellPanel.classList.contains("visible")) {
+                sellPanel.classList.remove("visible")
+                setTimeout(() => buyPanel.classList.add("visible"), 350)
+            }
+            else {
+                buyPanel.classList.toggle("visible")
+            }
+        }
+
 
         let cookie = document.cookie
 
@@ -54,14 +79,14 @@ const App = () => {
             const stocks = data.result.map(({id, name, short, price, number}) => {
                 iter++
                 return (
-                    <tr key={id}>
+                <tr key={id}>
                     <td className="id">{iter}</td>
                     <td className="medium">{name}</td>
                     <td className="small">{short}</td>
                     <td className="small">${price}</td>
                     <td className="small">{number}</td>
-                    <td className="button" style={{padding: 0, width: "100px"}} ><Button text="Sell" type="secondary" style={btnStyle} /></td>
-                    <td className="button" style={{padding: 0, width: "115px"}}><Button text="Buy" type="primary" style={btnStyle} /></td>
+                    <td className="button" style={{padding: 0, width: "100px"}} ><Button text="Sell" for={[id, name]} action={toggleSellPanel} type="secondary" style={btnStyle} /></td>
+                    <td className="button" style={{padding: 0, width: "115px"}}><Button text="Buy" for={[id, name]} action={toggleBuyPanel} type="primary" style={btnStyle} /></td>
                 </tr>
                 )
             })

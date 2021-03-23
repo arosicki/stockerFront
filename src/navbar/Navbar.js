@@ -1,7 +1,6 @@
 import './Navbar.css';
 import Button from '../universal/Button';
 import userlogo from '../img/user.svg';
-import Panel from '../universal/Panel'
 import {useState, useEffect} from 'react';
 import Loading from '../universal/Loading';
 import { LogInPanel, RegisterPanel, Userpanel } from '../side-panels/SidePanels';

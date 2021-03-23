@@ -1,0 +1,28 @@
+.del-acc.content > .msg {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+    height: 40px;
+}
+.del-acc.content {
+    position: absolute;
+    width: 360px;
+    top: 40px;
+    left: 25px;
+}
+/* .content > .floating-label {
+    left: 25px;
+} */
+.rest-passwd.content > .msg {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    height: 35px;
+}
+.rest-passwd.content {
+    position: absolute;
+    width: 360px;
+    top: 15px;
+    left: 25px;
+}

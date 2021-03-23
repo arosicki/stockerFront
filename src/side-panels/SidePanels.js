@@ -6,6 +6,7 @@ import logInImg from "../img/logIn.png"
 import registerImg from "../img/register.png"
 import {useState, useEffect} from "react"
 import Loading from "../universal/Loading"
+import { ChangePasswordModal, DeleteAccountModal } from "../modals/Modals"
 
 
 export const LogInPanel = ({setLogged, setUser}) => {
@@ -107,7 +108,7 @@ export const RegisterPanel = () => {
             if (username.length < 4) {
                 setRegisterErrMsg("Username is too short.");
             }
-            else if (username.length > 26) {
+            else if (username.length > 12) {
                 setRegisterErrMsg("Username is too long.");
             }
             else {
@@ -151,21 +152,59 @@ export const RegisterPanel = () => {
             </div>
         </Panel>
     )
-    }
+}
 
 export const Userpanel = ({setLogged}) => {
+
+    const [dispDelAccModal, setDispDelAccModal] = useState(false);
+    const [dispChPasswdModal, setDispChPasswdModal] = useState(false);
 
     let logOut = () => {
         document.cookie = "username=;token=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         setLogged(false)
     }
+    let deleteAccount = () => {                     
+        setDispDelAccModal(true)
+    }
+    let changePassword = () => {                     
+        setDispChPasswdModal(true)
+    }
 
 
 
     return (
+        <>
+        {dispDelAccModal ? <DeleteAccountModal setLogged={setLogged} setState={setDispDelAccModal} /> : ""}
+        {dispChPasswdModal ? <ChangePasswordModal setLogged={setLogged} setState={setDispChPasswdModal} /> : ""}
         <Panel side="right" cName="userpanel">
+            
             <div className="container">
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={changePassword} type="primary" text="ChangePassword" />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={logOut} type="primary" text="Log Out" />
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={deleteAccount} type="primary" text="Delete Account" />
+            </div>
+        </Panel>
+        </>
+    )
+}
+
+export const BuyStockPanel = ({logged, stock}) => {
+
+
+    return (
+        <Panel side="left" cName="buy-stock">
+            <div className="container">
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Log Out" />
+            </div>
+        </Panel>
+    )
+}
+
+export const SellStockPanel = ({setLogged}) => {
+    return (
+        <Panel side="left" cName="sell-stock">
+            <div className="container">
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Log Out" />
             </div>
         </Panel>
     )
