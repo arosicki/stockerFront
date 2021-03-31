@@ -6,13 +6,19 @@ import logInImg from "../img/logIn.png"
 import registerImg from "../img/register.png"
 import {useState, useEffect} from "react"
 import Loading from "../universal/Loading"
-import { ChangePasswordModal, DeleteAccountModal } from "../modals/Modals"
+import Tabs from "../tabs/Tabs"
+import { ChangePasswordModal, DeleteAccountModal, RestorePasswordModal } from "../modals/Modals"
 
 
 export const LogInPanel = ({setLogged, setUser}) => {
 
     const [loginErrMsg, setLoginErrMsg] = useState("");
     const [loading, setLoading] = useState(false);
+    const [restPasswdDispModal, setRestPasswdDispModal] = useState(false);
+
+    const restorePassword = () => {
+        setRestPasswdDispModal(true)
+    }
 
 
     const LogIn = async() => {
@@ -48,19 +54,25 @@ export const LogInPanel = ({setLogged, setUser}) => {
     }
 
     return (
+        <>
+        {restPasswdDispModal ? <RestorePasswordModal setLogged={setLogged} setState={setRestPasswdDispModal} /> : ""}
         <Panel side="right" cName="log-in">
             <div className="container">
-                {loading ? <Loading size="100px" /> : 
+            {loading ? 
+            <Loading size="100px" />
+             : 
             <>
-            <img style={{width: "340px"}} src={logInImg} alt="login"/>
+            <img style={{width: "340px"}} src={logInImg} alt="login" />
             <Input name="login-username" label="Username" width="340px" type="text" autoComplete="username" />
             <Input name="login-password" label="Password" width="340px" type="password" autoComplete="current-password" />
             <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={LogIn} type="primary" text="Sign In" />
+            <div className="restore-password"><span  onClick={restorePassword} className="restore-text">Restore Password</span></div>
             <div className="err-msg">{loginErrMsg}</div>
             </>
-}
+            }           
             </div>
         </Panel>
+        </>
     )
 }
 
@@ -71,7 +83,6 @@ export const RegisterPanel = () => {
     const [registerPassword, setRegisterPassword] = useState("");
     const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
     const [registerUsername, setRegisterUsername] = useState("");
-    // const [loading, setLoading] = useState(false);
     
     const register = async () => {
         let errMsg = document.querySelector(".reg-err-msg").innerText
@@ -179,8 +190,9 @@ export const Userpanel = ({setLogged}) => {
         <Panel side="right" cName="userpanel">
             
             <div className="container">
-                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={changePassword} type="primary" text="ChangePassword" />
+                <Tabs />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={logOut} type="primary" text="Log Out" />
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={changePassword} type="primary" text="ChangePassword" />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={deleteAccount} type="primary" text="Delete Account" />
             </div>
         </Panel>
@@ -188,23 +200,172 @@ export const Userpanel = ({setLogged}) => {
     )
 }
 
-export const BuyStockPanel = ({logged, stock}) => {
+export const BuyStockPanel = ({selectedStock, logged}) => {
+
+    const [prices, setPrices] = useState()
+    const [stockName, setStockName] = useState()
+    const [priceIsDisabled, setPriceIsDisabled] = useState(true)
+    const maxNumber = 2132
+
+    
 
 
+    useEffect( () => {
+        (async () => {
+            const response = await fetch(`http://localhost:8000/stocks/view.php?id=${selectedStock}`, {
+                method: "GET",
+            })
+            const data = await response.json();
+            setStockName(data.result.name)
+            let iter = 0;
+            const prices = data.result.sells.map(({number, price}) => {
+                iter++
+                return (
+                <tr key={iter}>
+                    <td className="id">{number}</td>
+                    <td className="medium">${price}</td>
+                </tr>
+                )
+            })
+            setPrices(prices)
+        })();
+
+    }, [selectedStock])
+
+    let wasClicked = () => setPriceIsDisabled(!priceIsDisabled)
+
+    let checkNumber = () => {
+        let numberField = document.querySelector("[name=sell-number]")
+        if (numberField.value < 1) {
+            numberField.value = 1
+        }
+        else if (numberField.value > maxNumber) {
+            numberField.value = maxNumber
+        }
+    }
+    let checkPrice = () => {
+        let priceField = document.querySelector("[name=sell-price]")
+        if (priceField.value < 1) {
+            priceField.value = 1
+        }
+    }
     return (
         <Panel side="left" cName="buy-stock">
-            <div className="container">
-                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Log Out" />
+            <div className="top">
+                <h2 style={{paddingBottom: "150px"}} className="sell-header">
+                    Buy {stockName}
+                </h2>
+                <h3 style={{paddingBottom: "10px"}}>
+                Current Offers:
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {prices}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bottom">
+                { logged ?
+                <div className="form">
+                <Input doOnChange={checkNumber} name="sell-number" label="Number"width="340px" type="number" />
+                <input onClick={wasClicked} style={{float: "left", margin: "3px 5px 8px 3px"}} type="checkbox" name="limit-price"/>
+                <label style={{float: "left", fontWeight: "normal", fontSize: "14px"}} htmlFor="limit-price">Limit Price</label>
+                <Input doOnChange={checkPrice} name="sell-price" label="Price Per One" width="340px" type="number" disabled={priceIsDisabled} />
+                <input style={{float: "left", margin: "3px 5px 8px 3px"}} type="checkbox" name="force"/>
+                <label style={{float: "left", fontWeight: "normal", fontSize: "14px"}} htmlFor="force">Force</label>
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Sell" />
+                </div>
+                :
+                <div>You must sign in to buy or sell stocks</div>
+                }
             </div>
         </Panel>
     )
 }
 
-export const SellStockPanel = ({setLogged}) => {
+export const SellStockPanel = ({selectedStock, logged = false}) => {
+
+    const [prices, setPrices] = useState()
+    const [stockName, setStockName] = useState()
+    const maxNumber = 2132
+
+    
+
+
+    useEffect( () => {
+        (async () => {
+            const response = await fetch(`http://localhost:8000/stocks/view.php?id=${selectedStock}`, {
+                method: "GET",
+            })
+            const data = await response.json();
+            setStockName(data.result.name)
+            let iter = 0;
+            const prices = data.result.sells.map(({number, price}) => {
+                iter++
+                return (
+                <tr key={iter}>
+                    <td className="id">{number}</td>
+                    <td className="medium">${price}</td>
+                </tr>
+                )
+            })
+            setPrices(prices)
+        })();
+
+    }, [selectedStock])
+
+    let checkNumber = () => {
+        let numberField = document.querySelector("[name=sell-number]")
+        if (numberField.value < 1) {
+            numberField.value = 1
+        }
+        else if (numberField.value > maxNumber) {
+            numberField.value = maxNumber
+        }
+    }
+    let checkPrice = () => {
+        let priceField = document.querySelector("[name=sell-price]")
+        if (priceField.value < 1) {
+            priceField.value = 1
+        }
+    }
     return (
         <Panel side="left" cName="sell-stock">
-            <div className="container">
-                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Log Out" />
+            <div className="top">
+                <h2 style={{paddingBottom: "150px"}} className="sell-header">
+                    Sell {stockName}
+                </h2>
+                <h3 style={{paddingBottom: "10px"}}>
+                Current Offers:
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {prices}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bottom">
+                { logged ?
+                <div className="form">
+                <Input doOnChange={checkNumber} name="sell-number" label="Number"width="340px" type="number" />
+                <Input doOnChange={checkPrice} name="sell-price" label="Price Per One" width="340px" type="number" />
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Sell" />
+                </div>
+                :
+                <div>You must sign in to buy or sell stocks</div>
+                }
             </div>
         </Panel>
     )

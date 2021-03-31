@@ -1,6 +1,5 @@
 import Table from '../universal/Table'
 import {BuyStockPanel, SellStockPanel} from '../side-panels/SidePanels'
-import Modal from '../universal/Modal'
 
 const head  = (
     <tr>
@@ -18,11 +17,12 @@ const style = {
 
 
 
-const Center = ({stocks}) => {
+const Center = ({stocks, logged, selectedStock}) => {
+    
     return (
         <>
-        <SellStockPanel />
-        <BuyStockPanel />
+        <SellStockPanel selectedStock={selectedStock} logged={logged} />
+        <BuyStockPanel selectedStock={selectedStock} logged={logged} />
         <Table style={style} body={stocks} head={head} />
         </>
     )

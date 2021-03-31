@@ -67,7 +67,7 @@ const User = ({user, setLogged}) => {
         <>
         <Userpanel setLogged={setLogged}  />
         <Button action={togglePanel} type="transparent" style={style}>
-            <span className="navbar-username">{user.username}</span>
+            <span className="navbar-username">{user.username.length > 8 ? user.username.substr(0,6) + "..." : user.username}</span>
             <span className="navbar-money">${user.money}</span>
             <img className="navbar-userlogo" src={userlogo} alt="User logo"/>
         </Button>

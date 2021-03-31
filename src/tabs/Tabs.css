@@ -1,0 +1,120 @@
+.user-stocks {
+    padding-bottom: 5px;
+}
+.tabs {
+    display: flex;
+    width: 340px;
+    height: 35px;
+}
+.tab {
+    position: absolute;
+    height: 35px;
+    width: 170px;
+    text-align: center;
+    color: #FFF;
+    font-size: 12px;
+    background-color: #555;
+    border-radius: 3px;
+    padding: 5px 0 50px;
+    cursor: pointer;
+    user-select: none;
+}
+.tab h2 {
+    font-weight: normal;
+}
+.tab.active {
+    background-color: #333;
+}
+.span {
+    width: 2px;
+    background-color: #fff;
+    height: 20px;
+}
+.selling {
+    left: 170px;
+}
+.stocks {
+    position: relative;
+    background-color: #333;
+    height: calc(100vh - 285px);
+    z-index: 0;
+    border-radius: 5px;
+}
+@keyframes fadeIn{
+    from {background-color: #1a1a1a;}
+}
+.stocks > table {
+    color: #fff;
+    margin-left: auto;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 16px;
+    border-spacing: 0;
+}
+.stocks > table > thead > tr > th {
+    padding: 5px 0 5px;
+}
+.stocks > table > tbody {
+    display: inline-block;
+    height: calc(100vh - 317px);
+    overflow-y: auto;
+    overflow-y: overlay;
+}
+.stocks > table > tbody > tr:nth-child(2n + 1) {
+    background-color: #333;
+}
+.stocks > table > tbody > tr:nth-child(2n) {
+    background-color: #1a1a1a;
+}
+.stocks > table > tbody > tr > td{
+    padding: 5px 0 5px;
+}
+.stocks > table > tbody > tr > td.medium, 
+.stocks > table > thead > tr > th.medium {
+    min-width: 100px;
+    max-width: 100px;
+}
+.stocks > table > tbody > tr > td.small,
+.stocks > table > thead > tr > th.small {
+    min-width: 60px;
+    max-width: 60px;
+}
+.stocks > table > tbody > tr > td.button {
+    max-width: 90px;
+    max-width: 90px;
+    background-color: #4f4f4f;
+}
+.stocks > table > tbody > tr > td.id, 
+.stocks > table > thead > tr > th.id {
+    min-width: 30px;
+    max-width: 30px;
+}
+.stocks > table > thead > tr > th.large {
+    width: 160px;
+}
+.stocks > table tr {
+    border-bottom: #555 1px solid;
+    display: block;
+    width: 100%;
+    animation: fadeIn 0.5s;
+}
+
+.stocks > table > tbody::-webkit-scrollbar {
+    width: 15px;
+}
+
+.stocks > table > tbody::-webkit-scrollbar-track {
+    background: #4f4f4f;
+    width: 1px;
+    background-clip: content-box;
+  }
+.stocks > table > tbody::-webkit-scrollbar-thumb {
+    background: #777;
+    border-radius: 10px;
+    width: 8px;
+    border: 2px solid #4f4f4f;
+  }
+  
+.stocks > table > tbody::-webkit-scrollbar-thumb:hover {
+    background: #7c7c7c;
+}

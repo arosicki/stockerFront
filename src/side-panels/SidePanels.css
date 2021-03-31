@@ -2,7 +2,8 @@
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 40%;
+    top: 50%;
+    color: white;
 }
 .err-msg {
     height: 22px;
@@ -12,4 +13,56 @@
 }
 .container > button {
     margin-bottom: 5px;
+}
+.container > .restore-password {
+    width: 340px;
+    height: 45px;
+    margin-top: 5px;
+    border-radius: 2px;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+    text-underline-position: under;
+}
+.container > .restore-password > .restore-text:hover {
+    color: #ddd;
+    cursor: pointer;
+}
+.top > table {
+    width: 340px;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    border: 1px #4d4d4d solid;
+}
+.top > table td {
+    height: 35px;
+    text-align: center;
+}
+.top > table th {
+    height: 35px;
+    text-align: center;
+    background-color: #111;
+}
+.top > table tr {
+    border-bottom: 1px #4d4d4d solid;
+}
+.top > table tr:nth-child(2n + 1) {
+    background-color: #333;
+}
+.top > table tr:nth-child(2n) {
+    background-color: #1a1a1a;
+}
+.top {
+    margin: 15px 0 0 30px;
+    color: #fff;
+}
+.bottom {
+    bottom: 130px;
+    margin-left: 30px;
+    position: absolute;
+    color: white;
+    text-align: center;
+    width: 340px;
+    font-weight: bold;
+    font-size: 18px;
 }

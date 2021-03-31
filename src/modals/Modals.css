@@ -11,13 +11,40 @@
     top: 40px;
     left: 25px;
 }
-/* .content > .floating-label {
-    left: 25px;
-} */
-.rest-passwd.content > .msg {
+.chg-passwd.content > .msg {
     font-weight: bold;
     text-align: center;
     margin-bottom: 15px;
+    height: 35px;
+}
+.chg-passwd.content {
+    position: absolute;
+    width: 360px;
+    top: 15px;
+    left: 25px;
+}
+.info-modal {
+    position: absolute;
+    top: 30px; 
+    left: 30px;
+}
+.info-modal > .ultra-useful-container {
+    height: 125px;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rest-passwd.content > .msg {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    height: 35px;
+}
+.rest-passwd.content .err-msg {
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
     height: 35px;
 }
 .rest-passwd.content {

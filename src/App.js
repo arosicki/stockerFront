@@ -1,6 +1,6 @@
 import Navbar from './navbar/Navbar';
 import Center from './center/Center';
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import Button from './universal/Button'
 import Loading from './universal/Loading'
 
@@ -10,30 +10,49 @@ const App = () => {
     const [stockData, setStockData] = useState([]);
     const [logged, setLogged] = useState(false);
     const [user, setUser] = useState({username: "", money: "", registerDate: "" });
+    const [selectedStock, setSelectedStock] = useState();
 
 
     useEffect( () => {
-        let toggleSellPanel = () => {
+        let toggleSellPanel = (e) => {
             const sellPanel = document.querySelector(".sell-stock.panel")
             const buyPanel = document.querySelector(".buy-stock.panel")
             if (buyPanel.classList.contains("visible")) {
                 buyPanel.classList.remove("visible")
+                setSelectedStock(e.target.id)
                 setTimeout(() => sellPanel.classList.add("visible"), 350)
             }
             else {
-                sellPanel.classList.toggle("visible")
+                if (sellPanel.classList.contains("visible") && e.target.className != /*on purpose*/ selectedStock) {
+                    sellPanel.classList.remove("visible")
+                    setSelectedStock(e.target.id)
+                    setTimeout(() => setSelectedStock(e.target.id), 150)
+                    setTimeout(() => sellPanel.classList.add("visible"), 350)
+                }
+                else {
+                    sellPanel.classList.toggle("visible")
+                }
+
             }
         }
 
-        let toggleBuyPanel = () => {
+        let toggleBuyPanel = (e) => {
             const sellPanel = document.querySelector(".sell-stock.panel")
             const buyPanel = document.querySelector(".buy-stock.panel")
             if (sellPanel.classList.contains("visible")) {
                 sellPanel.classList.remove("visible")
+                setSelectedStock(e.target.id)
                 setTimeout(() => buyPanel.classList.add("visible"), 350)
             }
             else {
-                buyPanel.classList.toggle("visible")
+                if (buyPanel.classList.contains("visible") && e.target.className != /*on purpose*/ selectedStock) {
+                    buyPanel.classList.remove("visible")
+                    setTimeout(() => setSelectedStock(e.target.id), 150)
+                    setTimeout(() => buyPanel.classList.add("visible"), 500)
+                }
+                else {
+                    buyPanel.classList.toggle("visible")
+                }
             }
         }
 
@@ -85,8 +104,8 @@ const App = () => {
                     <td className="small">{short}</td>
                     <td className="small">${price}</td>
                     <td className="small">{number}</td>
-                    <td className="button" style={{padding: 0, width: "100px"}} ><Button text="Sell" for={[id, name]} action={toggleSellPanel} type="secondary" style={btnStyle} /></td>
-                    <td className="button" style={{padding: 0, width: "115px"}}><Button text="Buy" for={[id, name]} action={toggleBuyPanel} type="primary" style={btnStyle} /></td>
+                    <td className="button" style={{padding: 0, width: "100px"}} ><Button text="Sell" id={id} action={toggleSellPanel} type="secondary" style={btnStyle} /></td>
+                    <td className="button" style={{padding: 0, width: "115px"}}><Button text="Buy" id={id} action={toggleBuyPanel} type="primary" style={btnStyle} /></td>
                 </tr>
                 )
             })
@@ -100,8 +119,8 @@ const App = () => {
 
     return (
         <>
-            <Navbar stockData={stockData} user={user} setUser={setUser} logged={logged} setLogged={setLogged} setStocks={setStocks} />
-            <Center stocks={stocks} />
+            <Navbar stockData={stockData} user={user} setUser={setUser} setSelectedStock={setSelectedStock} logged={logged} setLogged={setLogged} setStocks={setStocks} />
+            <Center stocks={stocks} logged={logged} selectedStock={selectedStock} />
         </>
     )
 }
