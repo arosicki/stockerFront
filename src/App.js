@@ -10,24 +10,56 @@ const App = () => {
     const [stockData, setStockData] = useState([]);
     const [logged, setLogged] = useState(false);
     const [user, setUser] = useState({username: "", money: "", registerDate: "" });
-    const [selectedStock, setSelectedStock] = useState();
+    const [selectedStock, setSelectedStock] = useState(1);
 
 
     useEffect( () => {
-        let toggleSellPanel = (e) => {
+        const btnStyle = {
+            width: "100px",
+            height: "42px",
+            float: "left"
+        }
+
+        setInterval(async() => {
+            if (document.querySelector(".panel.userpanel")) {
+            const cookie = document.cookie.split(";")
+            const NOW = new Date()
+            const TEN_MINS_LATER = new Date(NOW.getTime() + 600000)
+            console.log("x");
+            const tokenExpiryDate = new Date(cookie[2].split("=")[1])
+            if (tokenExpiryDate < TEN_MINS_LATER) {
+                let response = await fetch("http://localhost:8000/token/generateNew.php", {
+                        method: "POST",
+                        body: `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}"}`
+                    })
+                    let data = await response.json();
+                    if (data.success) {
+                        document.cookie = `token=${data.token}`
+                        document.cookie = `expires=${data.expires} GMT+0`
+                        console.log("d");
+                    }
+                    else {
+                        console.error(`Couldn't extend token: ${data.message}`)
+                        console.log("D");
+                    }
+            }
+        }
+        }, 540000);
+
+        let toggleSellPanel = ({target}) => {
             const sellPanel = document.querySelector(".sell-stock.panel")
             const buyPanel = document.querySelector(".buy-stock.panel")
+            const selectedStock = document.querySelector("#giga-ultra-useful-container").innerText
             if (buyPanel.classList.contains("visible")) {
                 buyPanel.classList.remove("visible")
-                setSelectedStock(e.target.id)
+                setSelectedStock(target.id)
                 setTimeout(() => sellPanel.classList.add("visible"), 350)
             }
             else {
-                if (sellPanel.classList.contains("visible") && e.target.className != /*on purpose*/ selectedStock) {
+                if (sellPanel.classList.contains("visible") && target.id !== selectedStock) {
                     sellPanel.classList.remove("visible")
-                    setSelectedStock(e.target.id)
-                    setTimeout(() => setSelectedStock(e.target.id), 150)
-                    setTimeout(() => sellPanel.classList.add("visible"), 350)
+                    setTimeout(() => setSelectedStock(target.id), 150)
+                    setTimeout(() => sellPanel.classList.add("visible"), 500)
                 }
                 else {
                     sellPanel.classList.toggle("visible")
@@ -39,13 +71,14 @@ const App = () => {
         let toggleBuyPanel = (e) => {
             const sellPanel = document.querySelector(".sell-stock.panel")
             const buyPanel = document.querySelector(".buy-stock.panel")
+            const selectedStock = document.querySelector("#giga-ultra-useful-container").innerText
             if (sellPanel.classList.contains("visible")) {
                 sellPanel.classList.remove("visible")
                 setSelectedStock(e.target.id)
                 setTimeout(() => buyPanel.classList.add("visible"), 350)
             }
             else {
-                if (buyPanel.classList.contains("visible") && e.target.className != /*on purpose*/ selectedStock) {
+                if (buyPanel.classList.contains("visible") && e.target.id !== selectedStock) {
                     buyPanel.classList.remove("visible")
                     setTimeout(() => setSelectedStock(e.target.id), 150)
                     setTimeout(() => buyPanel.classList.add("visible"), 500)
@@ -59,37 +92,28 @@ const App = () => {
 
         let cookie = document.cookie
 
-        let fetchUser = async (cookie) => {
-            let response = await fetch("http://localhost:8000/restricted/getAccountProps.php", {
-                method: "POST",
-                body: `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}"}`
-            })
-            let data = await response.json();
-            if (data.success) {
-                    setUser({username: data.username, money: data.money, registerDate: data.registerDate })
-            }
-        }
-
         let cookieData = cookie.split(";")
         
         if (cookieData[2] && cookieData[1]) {
             let now = new Date()
             let expires = new Date(cookieData[2].split("=")[1]);
             if (cookieData[0].split("=")[1] && cookieData[1].split("=")[1] && now < expires) {
-                setLogged(true)
-                fetchUser(cookieData)
+                (async (cookie) => {
+                    setLogged(true)
+                    let response = await fetch("http://localhost:8000/restricted/getAccountProps.php", {
+                        method: "POST",
+                        body: `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}"}`
+                    })
+                    let data = await response.json();
+                    if (data.success) {
+                            setUser({username: data.username, money: data.money, registerDate: data.registerDate })
+                    }
+                })(cookieData);
             }
         }
 
-        
 
-        const btnStyle = {
-            width: "100px",
-            height: "42px",
-            float: "left"
-        }
-
-        let fetchData = async () => {
+        (async () => {
             const response = await fetch("http://localhost:8000/stocks/view.php", {
                 method: "GET",
             })
@@ -111,14 +135,14 @@ const App = () => {
             })
         setStockData(data.result)
         setStocks(stocks);
-        }
-        fetchData()
+        })();
             
     }, [])
 
 
     return (
         <>
+            <div style={{display: 'none'}} id="giga-ultra-useful-container">{selectedStock}</div>
             <Navbar stockData={stockData} user={user} setUser={setUser} setSelectedStock={setSelectedStock} logged={logged} setLogged={setLogged} setStocks={setStocks} />
             <Center stocks={stocks} logged={logged} selectedStock={selectedStock} />
         </>

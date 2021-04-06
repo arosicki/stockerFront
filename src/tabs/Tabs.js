@@ -3,11 +3,32 @@ import { useState, useEffect } from 'react'
 import Button from "./../universal/Button"
 import Loading from "../universal/Loading"
 
-const Owned = () => {
+const Owned = ({ setSelectedStock }) => {
 
     const [stocks, setStocks] = useState(<div style={{position: "absolute", transform: "translate(-50%, -50%)", left: "50%", top: "50%"}}><Loading size="120px" /></div>)
 
     useEffect(() => {
+        let toggleSellPanel = ({target}) => {
+            const sellPanel = document.querySelector(".sell-stock.panel")
+            const buyPanel = document.querySelector(".buy-stock.panel")
+            const selectedStock = document.querySelector("#giga-ultra-useful-container").innerText
+            if (buyPanel.classList.contains("visible")) {
+                buyPanel.classList.remove("visible")
+                setSelectedStock(target.id)
+                setTimeout(() => sellPanel.classList.add("visible"), 350)
+            }
+            else {
+                if (sellPanel.classList.contains("visible") && target.id !== selectedStock) {
+                    sellPanel.classList.remove("visible")
+                    setTimeout(() => setSelectedStock(target.id), 150)
+                    setTimeout(() => sellPanel.classList.add("visible"), 500)
+                }
+                else {
+                    sellPanel.classList.toggle("visible")
+                }
+    
+            }
+        }
         (async () => {
             const cookie = document.cookie.split(";")
             const response = await fetch("http://localhost:8000/restricted/stocks/owned.php", {
@@ -24,7 +45,7 @@ const Owned = () => {
                     <td className="medium">{name}</td>
                     <td className="small">{short}</td>
                     <td className="small">{number}</td>
-                    <td className="button" style={{padding: 0}}><Button text="Sell" for={[id, name]} action={""} type="primary" style={{width: "90px", height: "32px"}} /></td>
+                    <td className="button" style={{padding: 0}}><Button text="Sell" id={id} action={toggleSellPanel} type="primary" style={{width: "90px", height: "32px"}} /></td>
                 </tr>
                 )
             })
@@ -39,9 +60,14 @@ const Owned = () => {
     )
 }
 
-const Selling = () => {
+const Selling = ({setState, setSelectedSellCancelation}) => {
 
     const [stocks, setStocks] = useState(<div style={{position: "absolute", transform: "translate(-50%, -50%)", left: "50%", top: "50%"}}><Loading size="120px" /></div>)
+
+    const dispCancelSellModal = ({target}) => {
+        setSelectedSellCancelation(parseInt(target.id))
+        setState(true)
+    }
 
     useEffect(() => {
         (async () => {
@@ -60,7 +86,7 @@ const Selling = () => {
                     <td className="medium">{name}</td>
                     <td className="small">{short}</td>
                     <td className="small">{number}</td>
-                    <td className="button" style={{padding: 0}}><Button text="Cancel" for={""} action={""} type="primary" style={{width: "90px", height: "32px"}} /></td>
+                    <td className="button" style={{padding: 0}}><Button text="Cancel" id={id} action={dispCancelSellModal} type="primary" style={{width: "90px", height: "32px"}} /></td>
                 </tr>
                 )
             })
@@ -77,7 +103,7 @@ const Selling = () => {
 
 
 
-const Tabs = () => {
+const Tabs = ({ setSelectedStock, setState, setSelectedSellCancelation }) => {
 
     const [displayedStocks, setDisplayedStocks] = useState(true)
     
@@ -118,7 +144,7 @@ const Tabs = () => {
                         <th style={{width: "90px", paddingRight: "15px"}}>Action</th>
                     </tr>
                 </thead>
-                {displayedStocks ? <Owned /> : <Selling />}
+                {displayedStocks ? <Owned setSelectedStock={setSelectedStock} /> : <Selling setSelectedSellCancelation={setSelectedSellCancelation} setState={setState} />}
                 </table> 
             </div>
         </div>

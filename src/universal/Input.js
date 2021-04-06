@@ -1,6 +1,6 @@
 import './Input.css'
 
-const FloatingLabel = ({name, label, width, type, autoComplete, doOnChange, value, disabled}) => {
+const Input = ({name, label, width, type, autoComplete, doOnChange, value, disabled}) => {
 
     return (
     <div className="floating-label">
@@ -11,4 +11,4 @@ const FloatingLabel = ({name, label, width, type, autoComplete, doOnChange, valu
     )
 }
 
-export default FloatingLabel
+export default Input

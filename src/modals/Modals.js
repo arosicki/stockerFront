@@ -20,7 +20,6 @@ export const DeleteAccountModal = ({setState, setLogged}) => {
             body: `{"username": "${username}", "password": "${password}"}`
         })
         let data = await response.json();
-        console.log(data);
         if (data.success) {
             setLogged(false)
             document.cookie = "username=;token=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -149,9 +148,8 @@ export const RestorePasswordModal = ({setState}) => {
             body: `{"username": "${username}"}`
         })
         let data = await response.json();
-        console.log(data);
         if (data.success) {
-            setdisplayText('New Password: ' + data.NewPassword)
+            setdisplayText("New Password: " + data.NewPassword)
             setdisplayInfo(true)
         }
         else {
@@ -175,6 +173,49 @@ export const RestorePasswordModal = ({setState}) => {
             <Input name="rest-uname" label="Username" width="340px" type="username" autoComplete="username" />
             <Button style={{width: "167px", marginRight: "6px", height: "35px", borderRadius: "2px", marginTop: "50px"}} action={close}  type="secondary" text="Cancel" />
             <Button style={{width: "167px", marginTop: "10px", height: "35px", borderRadius: "2px"}} action={restorePassword} type="primary" text="Confirm" />
+            </div>
+            }
+        </Modal>
+    )
+}
+export const CancelSellModal = ({setState, selectedSellCancelation}) => {
+
+    const [displayInfo, setdisplayInfo] = useState(false)
+    const [displayText, setdisplayText] = useState("")
+
+    const close = () => {
+        setState(false)
+    }
+
+    const cancelSell = async() => {
+        const cookie = document.cookie.split(";")
+        let response = await fetch("http://localhost:8000/restricted/stocks/cancelSell.php", {
+            method: "POST",
+            body: `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}", "id": "${selectedSellCancelation}"}`
+        })
+        let data = await response.json();
+        if (data.success) {
+            close()
+        }
+        else {
+            document.querySelector(".cancel-sell .err-msg").innerText = data.message
+        }
+    }
+
+    return (
+        <Modal cName="change-password" height="250px" setState={setState} width="400px">
+            {displayInfo ? 
+            <div className="info-modal">
+            <div className="ultra-useful-container">
+            <div>{displayText}</div>
+            </div>
+            <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={close}  type="primary" text="Close" />
+            </div>
+             : 
+            <div className="cancel-sell content">
+            <div className="msg">Cancel stock sell offer?<br /> <div className="err-msg"></div></div>
+            <Button style={{width: "167px", marginRight: "6px", height: "35px", borderRadius: "2px", marginTop: "50px"}} action={close}  type="secondary" text="Cancel" />
+            <Button style={{width: "167px", marginTop: "10px", height: "35px", borderRadius: "2px"}} action={cancelSell} type="primary" text="Confirm" />
             </div>
             }
         </Modal>

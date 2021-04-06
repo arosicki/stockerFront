@@ -49,7 +49,7 @@ const NoUser = ({setLogged, setUser}) => {
 
 }
 
-const User = ({user, setLogged}) => {
+const User = ({user, setLogged, setSelectedStock}) => {
 
     let togglePanel = () => {
         let panel = document.querySelector(".panel.userpanel");
@@ -65,7 +65,7 @@ const User = ({user, setLogged}) => {
 
     return (
         <>
-        <Userpanel setLogged={setLogged}  />
+        <Userpanel setSelectedStock={setSelectedStock} setLogged={setLogged}  />
         <Button action={togglePanel} type="transparent" style={style}>
             <span className="navbar-username">{user.username.length > 8 ? user.username.substr(0,6) + "..." : user.username}</span>
             <span className="navbar-money">${user.money}</span>
@@ -133,13 +133,13 @@ const Search = ({setStocks, stockData}) => {
     )
 }
 
-const Navbar = ({setStocks, stockData, logged, setLogged, setUser, user}) => {
+const Navbar = ({setStocks, stockData, logged, setLogged, setUser, user, setSelectedStock}) => {
 
 return (
     <nav className="navbar">
         <Brand />
         <Search stockData={stockData} setStocks={setStocks} />
-        {logged ? <User user={user} setLogged={setLogged} /> : <NoUser setLogged={setLogged} setUser={setUser} />}
+        {logged ? <User user={user} setSelectedStock={setSelectedStock} setLogged={setLogged} /> : <NoUser setLogged={setLogged} setUser={setUser} />}
     </nav>
 )
 }

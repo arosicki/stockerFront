@@ -7,7 +7,7 @@ import registerImg from "../img/register.png"
 import {useState, useEffect} from "react"
 import Loading from "../universal/Loading"
 import Tabs from "../tabs/Tabs"
-import { ChangePasswordModal, DeleteAccountModal, RestorePasswordModal } from "../modals/Modals"
+import { ChangePasswordModal, DeleteAccountModal, RestorePasswordModal, CancelSellModal } from "../modals/Modals"
 
 
 export const LogInPanel = ({setLogged, setUser}) => {
@@ -34,7 +34,7 @@ export const LogInPanel = ({setLogged, setUser}) => {
         if (data.success) {
             document.cookie = `username=${username}`
             document.cookie = `token=${data.token}`
-            document.cookie = `expires=${data.expires} GMT`
+            document.cookie = `expires=${data.expires} GMT+0`
             let responseUser = await fetch("http://localhost:8000/restricted/getAccountProps.php", {
             method: "POST",
             body: `{"username": "${username}", "token": "${data.token}"}`
@@ -165,10 +165,13 @@ export const RegisterPanel = () => {
     )
 }
 
-export const Userpanel = ({setLogged}) => {
+export const Userpanel = ({setLogged, setSelectedStock}) => {
 
     const [dispDelAccModal, setDispDelAccModal] = useState(false);
+    const [dispDelSellModal, setDispDelSellModal] = useState(false);
     const [dispChPasswdModal, setDispChPasswdModal] = useState(false);
+    const [selectedSellCancelation, setSelectedSellCancelation] = useState(1);
+
 
     let logOut = () => {
         document.cookie = "username=;token=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -187,10 +190,10 @@ export const Userpanel = ({setLogged}) => {
         <>
         {dispDelAccModal ? <DeleteAccountModal setLogged={setLogged} setState={setDispDelAccModal} /> : ""}
         {dispChPasswdModal ? <ChangePasswordModal setLogged={setLogged} setState={setDispChPasswdModal} /> : ""}
+        {dispDelSellModal ? <CancelSellModal selectedSellCancelation={selectedSellCancelation} setState={setDispDelSellModal} /> : ""}
         <Panel side="right" cName="userpanel">
-            
             <div className="container">
-                <Tabs />
+                <Tabs setSelectedSellCancelation={setSelectedSellCancelation} setState={setDispDelSellModal} setSelectedStock={setSelectedStock} />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={logOut} type="primary" text="Log Out" />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={changePassword} type="primary" text="ChangePassword" />
                 <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={deleteAccount} type="primary" text="Delete Account" />
@@ -205,7 +208,6 @@ export const BuyStockPanel = ({selectedStock, logged}) => {
     const [prices, setPrices] = useState()
     const [stockName, setStockName] = useState()
     const [priceIsDisabled, setPriceIsDisabled] = useState(true)
-    const maxNumber = 2132
 
     
 
@@ -232,19 +234,41 @@ export const BuyStockPanel = ({selectedStock, logged}) => {
 
     }, [selectedStock])
 
-    let wasClicked = () => setPriceIsDisabled(!priceIsDisabled)
+    const wasClicked = () => setPriceIsDisabled(!priceIsDisabled)
 
-    let checkNumber = () => {
-        let numberField = document.querySelector("[name=sell-number]")
+    const buyStock = async () => {
+        const infoField = document.querySelector(".info-buy-msg")
+        const cookie = document.cookie.split(";")
+        const number = parseInt(document.querySelector("[name=buy-number]").value)
+        const price = parseInt(document.querySelector("[name=buy-price]").value)
+        const force = document.querySelector("[name=force]").checked
+        const limitPrice = document.querySelector("[name=limit-price]").checked
+        if (number && (price || !limitPrice)) {
+            let req = `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}", ${limitPrice ? '"pricePerOne": "' + price + '", ' : ""} "number": ${number}, "stockId": ${selectedStock}, "force": ${force}}`
+            const response = await fetch("http://localhost:8000/restricted/stocks/buy.php", {
+                method: "POST",
+                body: req
+            })
+            const data = await response.json();
+            if (data.success) {
+                infoField.innerText = "Success"
+                infoField.style.color = "green"
+            }
+            else {
+                infoField.innerText = data.message
+                infoField.style.color = "red"
+            }
+        }
+    }
+
+    const checkNumber = () => {
+        let numberField = document.querySelector("[name=buy-number]")
         if (numberField.value < 1) {
             numberField.value = 1
         }
-        else if (numberField.value > maxNumber) {
-            numberField.value = maxNumber
-        }
     }
-    let checkPrice = () => {
-        let priceField = document.querySelector("[name=sell-price]")
+    const checkPrice = () => {
+        let priceField = document.querySelector("[name=buy-price]")
         if (priceField.value < 1) {
             priceField.value = 1
         }
@@ -252,7 +276,7 @@ export const BuyStockPanel = ({selectedStock, logged}) => {
     return (
         <Panel side="left" cName="buy-stock">
             <div className="top">
-                <h2 style={{paddingBottom: "150px"}} className="sell-header">
+                <h2 style={{paddingBottom: "150px"}} className="buy-header">
                     Buy {stockName}
                 </h2>
                 <h3 style={{paddingBottom: "10px"}}>
@@ -273,13 +297,14 @@ export const BuyStockPanel = ({selectedStock, logged}) => {
             <div className="bottom">
                 { logged ?
                 <div className="form">
-                <Input doOnChange={checkNumber} name="sell-number" label="Number"width="340px" type="number" />
+                <Input doOnChange={checkNumber} name="buy-number" label="Number"width="340px" type="number" />
                 <input onClick={wasClicked} style={{float: "left", margin: "3px 5px 8px 3px"}} type="checkbox" name="limit-price"/>
                 <label style={{float: "left", fontWeight: "normal", fontSize: "14px"}} htmlFor="limit-price">Limit Price</label>
-                <Input doOnChange={checkPrice} name="sell-price" label="Price Per One" width="340px" type="number" disabled={priceIsDisabled} />
+                <Input doOnChange={checkPrice} name="buy-price" label="Price Per One" width="340px" type="number" disabled={priceIsDisabled} />
                 <input style={{float: "left", margin: "3px 5px 8px 3px"}} type="checkbox" name="force"/>
                 <label style={{float: "left", fontWeight: "normal", fontSize: "14px"}} htmlFor="force">Force</label>
-                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Sell" />
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={buyStock} type="primary" text="Buy" />
+                <div style={{paddingTop: "6px", height: "18px", fontSize: "18px"}} className="info-buy-msg"></div>
                 </div>
                 :
                 <div>You must sign in to buy or sell stocks</div>
@@ -289,17 +314,16 @@ export const BuyStockPanel = ({selectedStock, logged}) => {
     )
 }
 
-export const SellStockPanel = ({selectedStock, logged = false}) => {
+export const SellStockPanel = ({selectedStock, logged}) => {
 
     const [prices, setPrices] = useState()
     const [stockName, setStockName] = useState()
-    const maxNumber = 2132
+
 
     
 
 
-    useEffect( () => {
-        (async () => {
+    useEffect( () => {(async () => {
             const response = await fetch(`http://localhost:8000/stocks/view.php?id=${selectedStock}`, {
                 method: "GET",
             })
@@ -316,20 +340,39 @@ export const SellStockPanel = ({selectedStock, logged = false}) => {
                 )
             })
             setPrices(prices)
-        })();
+        })();}, [selectedStock])
 
-    }, [selectedStock])
+    const sellStock = async () => {
+        const infoField = document.querySelector(".info-sell-msg")
+        const cookie = document.cookie.split(";")
+        const number = parseInt(document.querySelector("[name=sell-number]").value)
+        const price = parseInt(document.querySelector("[name=sell-price]").value)
+        if (number && price) {
+        const response = await fetch("http://localhost:8000/restricted/stocks/sell.php", {
+                method: "POST",
+                body: `{"username": "${cookie[0].split("=")[1]}", "token": "${cookie[1].split("=")[1]}", "pricePerOne": ${price}, "number": ${number}, "stockId": ${selectedStock}}`
+            })
+            const data = await response.json();
+            if (data.success) {
+                infoField.innerText = "Success"
+                infoField.style.color = "green"
+            }
+            else {
+                infoField.innerText = data.message
+                infoField.style.color = "red"
+            }
+        }
+    }
 
-    let checkNumber = () => {
+
+    const checkNumber = () => {
         let numberField = document.querySelector("[name=sell-number]")
         if (numberField.value < 1) {
             numberField.value = 1
         }
-        else if (numberField.value > maxNumber) {
-            numberField.value = maxNumber
-        }
+        
     }
-    let checkPrice = () => {
+    const checkPrice = () => {
         let priceField = document.querySelector("[name=sell-price]")
         if (priceField.value < 1) {
             priceField.value = 1
@@ -359,9 +402,10 @@ export const SellStockPanel = ({selectedStock, logged = false}) => {
             <div className="bottom">
                 { logged ?
                 <div className="form">
-                <Input doOnChange={checkNumber} name="sell-number" label="Number"width="340px" type="number" />
+                <Input doOnChange={checkNumber} name="sell-number" label="Number" width="340px" type="number" />
                 <Input doOnChange={checkPrice} name="sell-price" label="Price Per One" width="340px" type="number" />
-                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} type="primary" text="Sell" />
+                <Button style={{width: "340px", height: "35px", borderRadius: "2px"}} action={sellStock} type="primary" text="Sell" />
+                <div style={{paddingTop: "6px", height: "18px", fontSize: "18px"}} className="info-sell-msg"></div>
                 </div>
                 :
                 <div>You must sign in to buy or sell stocks</div>
